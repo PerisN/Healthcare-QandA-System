@@ -18,8 +18,11 @@ torch = "==2.0.0"
 numpy = "==1.26.4"
 python-dotenv = "*"
 ipywidgets = "*"
-wordcloud = "*"
 matplotlib = "*"
+wget = "*"
+seaborn = "*"
+pgcli = "*"
+psycopg2 = "*"
 
 [dev-packages]
 
