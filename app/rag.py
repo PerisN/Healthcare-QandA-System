@@ -1,24 +1,38 @@
 import json
 from time import time
+import openai
 from openai import OpenAI
 import ingest
+from sentence_transformers import SentenceTransformer
+import os
+from dotenv import load_dotenv
+import logging
 
+# Load environment variables
+load_dotenv()
 
-client = OpenAI()
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+
+# OpenAI API and model configuration
+MODEL_NAME = os.getenv("MODEL_NAME")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+
+model = SentenceTransformer(MODEL_NAME)
 index = ingest.load_index()
 
+client = openai.OpenAI()
 
-def search(query):
-    boost = {
-        'question': 2.11,
-        'answer': 1.46
-    }
 
-    results = index.search(
-        query=query, filter_dict={}, boost_dict=boost, num_results=10
-    )
-
+def minsearch_search(field, query_vector):
+    query = {field: query_vector.reshape(1, -1)}
+    results = index.search(query_vectors=query, num_results=10)
     return results
+
+def search(question):
+    field = 'question_answer'
+    query_vector = model.encode([question])
+    return minsearch_search(field, query_vector)
 
 
 def build_prompt(query, search_results):
@@ -40,20 +54,21 @@ CONTEXT: {context}
     return prompt
 
 
-def llm(prompt, model="gpt-4o-mini"):
-    response = client.chat.completions.create(
-        model=model, messages=[{"role": "user", "content": prompt}]
-    )
-
-    answer = response.choices[0].message.content
-
-    token_stats = {
-        "prompt_tokens": response.usage.prompt_tokens,
-        "completion_tokens": response.usage.completion_tokens,
-        "total_tokens": response.usage.total_tokens,
-    }
-
-    return answer, token_stats
+def llm(prompt, model=OPENAI_MODEL, timeout=10):
+    try:
+        response = client.chat.completions.create(
+            model=model, messages=[{"role": "user", "content": prompt}], timeout=timeout
+        )
+        answer = response.choices[0].message.content
+        token_stats = {
+            "prompt_tokens": response.usage.prompt_tokens,
+            "completion_tokens": response.usage.completion_tokens,
+            "total_tokens": response.usage.total_tokens,
+        }
+        return answer, token_stats
+    except openai.error.OpenAIError as e:
+        logging.error(f"Error with OpenAI API: {e}")
+        return "Error in generating response", {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
 
 
 evaluation_prompt_template = """
@@ -103,6 +118,7 @@ def calculate_openai_cost(model, tokens):
 
 
 def rag(query, model="gpt-4o-mini"):
+    logging.info(f"Running RAG for query: {query}")
     t0 = time()
 
     search_results = search(query)
@@ -137,3 +153,4 @@ def rag(query, model="gpt-4o-mini"):
     }
 
     return answer_data
+logging.info("LLM response generated successfully.")

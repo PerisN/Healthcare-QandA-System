@@ -2,7 +2,7 @@ import os
 import requests
 import pandas as pd
 from sentence_transformers import SentenceTransformer
-from elasticsearch import Elasticsearch
+import minsearch2
 from tqdm.auto import tqdm
 from dotenv import load_dotenv
 
@@ -10,94 +10,63 @@ from db import init_db
 
 load_dotenv()
 
-ELASTIC_URL = os.getenv("ELASTIC_URL_LOCAL")
 MODEL_NAME = os.getenv("MODEL_NAME")
 INDEX_NAME = os.getenv("INDEX_NAME")
 
-BASE_URL = "https://github.com/PerisN/Healthcare-QandA-System/tree/main"
-
+BASE_URL = "https://raw.githubusercontent.com/PerisN/Healthcare-QandA-System/main"
 
 def fetch_documents():
     print("Fetching documents...")
     relative_url = "data/data-with-ids.json"
-    docs_url = f"{BASE_URL}/{relative_url}?raw=1"
+    docs_url = f"{BASE_URL}/{relative_url}"
     docs_response = requests.get(docs_url)
     documents = docs_response.json()
     print(f"Fetched {len(documents)} documents")
     return documents
 
-
 def fetch_ground_truth():
     print("Fetching ground truth data...")
     relative_url = "data/ground-truth-retrieval.csv"
-    ground_truth_url = f"{BASE_URL}/{relative_url}?raw=1"
+    ground_truth_url = f"{BASE_URL}/{relative_url}"
     df_ground_truth = pd.read_csv(ground_truth_url)
     ground_truth = df_ground_truth.to_dict(orient="records")
     print(f"Fetched {len(ground_truth)} ground truth records")
     return ground_truth
 
-
 def load_model():
     print(f"Loading model: {MODEL_NAME}")
     return SentenceTransformer(MODEL_NAME)
 
-
-def setup_elasticsearch():
-    print("Setting up Elasticsearch...")
-    es_client = Elasticsearch(ELASTIC_URL)
-
-    index_settings = {
-        "settings": {"number_of_shards": 1, "number_of_replicas": 0},
-        "mappings": {
-            "properties": {
-                "text": {"type": "text"},
-                "section": {"type": "text"},
-                "question": {"type": "text"},
-                "course": {"type": "keyword"},
-                "id": {"type": "keyword"},
-                "question_answer_vector": {
-                    "type": "dense_vector",
-                    "dims": 384,
-                    "index": True,
-                    "similarity": "cosine",
-                },
-            }
-        },
-    }
-
-    es_client.indices.delete(index=INDEX_NAME, ignore_unavailable=True)
-    es_client.indices.create(index=INDEX_NAME, body=index_settings)
-    print(f"Elasticsearch index '{INDEX_NAME}' created")
-    return es_client
-
-
-def index_documents(es_client, documents, model):
+def index_documents(documents, model):
     print("Indexing documents...")
-    for doc in tqdm(documents):
-        question = doc["question"]
-        answer = doc["answer"]
-        doc["question_answer_vector"] = model.encode(question + " " + answer).tolist()
-        es_client.index(index=INDEX_NAME, document=doc)
-    print(f"Indexed {len(documents)} documents")
+    
+    text_fields = ['question_answer']
+    keyword_fields = ['id']
 
+    for doc in documents:
+        doc['question_answer'] = doc['question'] + " " + doc['answer']
+    index = minsearch2.Index(text_fields, keyword_fields)
+
+    for doc in tqdm(documents, desc="Encoding documents"):
+        for field in text_fields:
+            doc[field] = model.encode(doc[field]).tolist()
+
+    index.fit(documents)
+    print(f"Indexed {len(documents)} documents")
+    return index
 
 def main():
-    # you may consider to comment <start>
-    # if you just want to init the db or didn't want to re-index
     print("Starting the indexing process...")
 
     documents = fetch_documents()
     ground_truth = fetch_ground_truth()
     model = load_model()
-    es_client = setup_elasticsearch()
-    index_documents(es_client, documents, model)
-    # you may consider to comment <end>
+    index = index_documents(documents, model)
 
     print("Initializing database...")
     init_db()
 
     print("Indexing process completed successfully!")
-
 
 if __name__ == "__main__":
     main()

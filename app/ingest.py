@@ -2,12 +2,11 @@ import os
 import pandas as pd
 import minsearch
 
+DATA_PATH = os.getenv("DATA_PATH")
 
-DATA_PATH = os.getenv("DATA_PATH", "../data/sample_data.csv")
-
-
-def load_index(data_path=DATA_PATH):
-    df = pd.read_csv(data_path)
+def load_index():
+    print(f"Loading data..")  # Debugging line
+    df = pd.read_csv('app\sample_data.csv')
 
     documents = df.to_dict(orient="records")
 
@@ -15,10 +14,8 @@ def load_index(data_path=DATA_PATH):
         text_fields=[
             "question",
             "answer",
-            "source",
-            "focus_area"
         ],
-        keyword_fields=["id"],
+        keyword_fields=['id']
     )
 
     index.fit(documents)
