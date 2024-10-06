@@ -22,8 +22,9 @@ The Health Assistant is designed to assist users in various health-related areas
 
 ## Dataset
 
-This project utilizes a subset of the MedQuAD (Medical Question Answering Dataset), a comprehensive collection of medical question-answer pairs. Key features include:
+This project utilizes a subset of the [MedQuAD](https://www.kaggle.com/datasets/jpmiller/layoutlm/data?select=medquad.csv) (Medical Question Answering Dataset), a comprehensive collection of medical question-answer pairs. 
 
+Key features include:
 1. Source: Derived from 12 NIH websites, including cancer.gov, niddk.nih.gov, GARD, and MedlinePlus Health Topics.
 2. Scope: Originally containing 47,457 question-answer pairs covering 37 question types related to diseases, drugs, and medical tests.
 3. Question types: Includes categories such as Treatment, Diagnosis, and Side Effects.
