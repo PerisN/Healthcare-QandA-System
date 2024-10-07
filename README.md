@@ -78,13 +78,13 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
 ## Retrieval and Evaluation Experiments
 
 - Jupyter notebooks in `notebooks` folder
-  - `starter-notebook` :: Data exploration and rag flow test
-  - `ground-truth-data.ipynb` :: Evaluation dataset generation
-  - `text-search-eval.ipynb` :: Retrieval evaluation of text search using misnearch and elastic search
-  - `vector-minsearch-eval.ipynb` :: Vector experiments using minsearch
-  - `vector-eleasticsearch-eval.ipynb` :: Vector experiments using elastic search
+  - `starter-notebook` : Data exploration and rag flow test
+  - `ground-truth-data.ipynb` : Evaluation dataset generation
+  - `text-search-eval.ipynb` : Retrieval evaluation of text search using misnearch and elastic search
+  - `vector-minsearch-eval.ipynb` : Vector experiments using minsearch
+  - `vector-eleasticsearch-eval.ipynb` : Vector experiments using elastic search
   - `rag-evaluation.ipynb` : RAG evaluation using combination vectors
-  - `rag-evaluation_2.ipynb` :: RAG evaluation using boosted parameters
+  - `rag-evaluation_2.ipynb` : RAG evaluation using boosted parameters
 
 ### Retrieval Evaluation Results
 
@@ -93,13 +93,13 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
    - Hit rate : 91%
    - MRR : 86%
 
-2.  Text search with boosting:
+2. Text search with boosting:
    - Hit rate : 90% (slightly worse)
    - MRR : 86%
 
 3. Vector Search with Combinations: 
          ```python
-         
+
         question_answer_vector; Hit Rate: 98%, MRR: 95%
         answer_focus_vector; Hit Rate: 97%, MRR: 93%
         question_answer_focus_vector; Hit Rate: 97%, MRR: 91%
@@ -112,7 +112,7 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
    - Hit rate : 96%
    - MRR : 92%
 
-2.  Text search with tuned boosting:
+2. Text search with tuned boosting:
    - Hit rate : 97.7%
    - MRR : 93%
 
