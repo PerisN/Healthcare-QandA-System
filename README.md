@@ -56,5 +56,99 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
 * PostgreSQL: Database management
 * Grafana: Monitoring and visualization
    
-   
+## Code Organization
+
+- Main application code is in the `app` folder:
+  - `app.py`: Flask API (main entry point)
+  - `rag.py`: Core RAG logic
+  - `ingest.py`: Data ingestion for knowledge base
+  - `minsearch2.py`: In-memory search engine
+  - `db.py`: Request/response logging to PostgreSQL
+  - `db_prep.py`: Database initialization
+  - `test.py`: Random question selector from generated ground truth data for testing
+ 
+
+### Interface and Data Ingestion
+
+- Flask serves the application as an API
+- `ingest.py` handles data ingestion
+- In-memory database (`minsearch2.py`) used as knowledge base
+- Ingestion runs at application startup (executed in `rag.py`)
+
+## Retrieval and Evaluation Experiments
+
+- Jupyter notebooks in `notebooks` folder
+  - `starter-notebook` :: Data exploration and rag flow test
+  - `ground-truth-data.ipynb` :: Evaluation dataset generation
+  - `text-search-eval.ipynb` :: Retrieval evaluation of text search using misnearch and elastic search
+  - `vector-minsearch-eval.ipynb` :: Vector experiments using minsearch
+  - `vector-eleasticsearch-eval.ipynb` :: Vector experiments using elastic search
+  - `rag-evaluation.ipynb` : RAG evaluation using combination vectors
+  - `rag-evaluation_2.ipynb` :: RAG evaluation using boosted parameters
+
+### Retrieval Evaluation Results
+
+#### ElasticSearch 
+1. Text search (without boosting):
+   - Hit rate : 91%
+   - MRR : 86%
+
+2.  Text search with boosting:
+   - Hit rate : 90% (slightly worse)
+   - MRR : 86%
+
+3. Vector Search with Combinations: 
+         ```python
+        question_answer_vector; Hit Rate: 98%, MRR: 95%
+        answer_focus_vector; Hit Rate: 97%, MRR: 93%
+        question_answer_focus_vector; Hit Rate: 97%, MRR: 91%
+        question_vector; Hit Rate: 96%, MRR: 93%
+        question_focus_vector; Hit Rate: 96%, MRR: 92%
+        answer_vector; Hit Rate: 96%, MRR: 90%```
+
+#### Minsearch
+1. Text search (without boosting):
+   - Hit rate : 96%
+   - MRR : 92%
+
+2.  Text search with tuned boosting:
+   - Hit rate : 97.7%
+   - MRR : 93%
+
+ Boosting parameters:
+   ```python
+   boost = {
+    'question': 2.209413642492037, 
+    'answer': 2.030098462268734, 
+    'source': 2.6765387031145362, 
+    'focus_area': 0.26081649788824846
+   }
+   ```
+
+1. Vector Search with Combinations:
+        ```python
+        question_answer_vector; Hit Rate: 99%  MRR: 96%  
+        question_answer_focus_vector; Hit Rate: 0.99%, MRR: 95%
+        answer_focus_vector; Hit Rate: 99%, MRR: 93%
+        answer_vector; Hit Rate: 98%, MRR: 90%
+        question_vector; Hit Rate: 97%, MRR: 93%
+        question_focus_vector; Hit Rate: 97%, MRR: 93%```
+
+### RAG Flow Evaluation
+
+Using LLM-as-a-Judge metric (sample) utilizing ```python 
+question_answer_vector```:
+
+1. `gpt-4o-mini`:
+   - RELEVANT: 88%
+   - PARTLY_RELEVANT: 6%%
+   - NON_RELEVANT: 6%
+
+2. `gpt-4o`:
+   - RELEVANT: 86%
+   - PARTLY_RELEVANT : 8%
+   - NON_RELEVANT: 6%
+
+`gpt-4o-mini` was chosen for the final implementation.
+
    
