@@ -98,7 +98,7 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
    - MRR : 86%
 
 3. Vector Search with Combinations: 
-         ```python
+         ```
         question_answer_vector; Hit Rate: 98%, MRR: 95%
         answer_focus_vector; Hit Rate: 97%, MRR: 93%
         question_answer_focus_vector; Hit Rate: 97%, MRR: 91%
@@ -126,7 +126,7 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
    ```
 
 1. Vector Search with Combinations:
-        ```python
+        ```
         question_answer_vector; Hit Rate: 99%  MRR: 96%  
         question_answer_focus_vector; Hit Rate: 0.99%, MRR: 95%
         answer_focus_vector; Hit Rate: 99%, MRR: 93%
@@ -136,8 +136,7 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
 
 ### RAG Flow Evaluation
 
-Using LLM-as-a-Judge metric (sample) utilizing ```python 
-question_answer_vector```:
+Using LLM-as-a-Judge metric (sample) utilizing ```question_answer_vector```:
 
 1. `gpt-4o-mini`:
    - RELEVANT: 88%
