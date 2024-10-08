@@ -48,11 +48,11 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
    }
 
 ## Technology Stack
-* Python 3.10: Core development
+* Python 3.12.1: Core development
 * Docker & Docker Compose: Containerization
 * Minsearch: Full-text search
 * OpenAI API: Language model integration
-* Flask: API framework
+* Streamli: User Interface
 * PostgreSQL: Database management
 * Grafana: Monitoring and visualization
    
