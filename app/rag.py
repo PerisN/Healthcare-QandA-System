@@ -18,8 +18,9 @@ logging.basicConfig(level=logging.INFO)
 MODEL_NAME = os.getenv("MODEL_NAME")
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
 
+documents = ingest.fetch_documents()
 model = SentenceTransformer(MODEL_NAME)
-index = ingest.load_index()
+index = ingest.index_documents(documents, model)
 
 client = openai.OpenAI()
 
@@ -137,7 +138,6 @@ def rag(query, model="gpt-4o-mini"):
 
     answer_data = {
         "answer": answer,
-        "model_used": model,
         "response_time": took,
         "relevance": relevance.get("Relevance", "UNKNOWN"),
         "relevance_explanation": relevance.get(
