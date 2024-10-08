@@ -22,12 +22,12 @@ wget = "*"
 seaborn = "*"
 pgcli = "*"
 psycopg2 = "*"
-torch = "==2.1.0"
+torch = "==2.2.0"
 setuptools = "*"
 wheel = "*"
-flask = "*"
+streamlit = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.10"
+python_version = "3.12.1"
