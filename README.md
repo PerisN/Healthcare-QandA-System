@@ -70,7 +70,7 @@ If you use the MedQuAD dataset, please cite the following paper: "A Question-Ent
 
 ### Interface and Data Ingestion
 
-- Flask serves the application as an API
+- Streamlit serves the application as a UI
 - `ingest.py` handles data ingestion
 - In-memory database (`minsearch2.py`) used as knowledge base
 - Ingestion runs at application startup (executed in `rag.py`)
@@ -97,14 +97,13 @@ If you use the MedQuAD dataset, please cite the following paper: "A Question-Ent
    - Hit rate : 90% (slightly worse)
    - MRR : 86%
 
-3. Hybrid Vector Search:
-         ```
-        question_answer_vector; Hit Rate: 98%, MRR: 95%
-        answer_focus_vector; Hit Rate: 97%, MRR: 93%
-        question_answer_focus_vector; Hit Rate: 97%, MRR: 91%
-        question_vector; Hit Rate: 96%, MRR: 93%
-        question_focus_vector; Hit Rate: 96%, MRR: 92%
-        answer_vector; Hit Rate: 96%, MRR: 90% ```
+3. Hybrid Vector Search:   
+   1.  question_answer_vector; ```Hit Rate: 98%, MRR: 95%```
+   2.  answer_focus_vector; ```Hit Rate: 97%, MRR: 93%```
+   3.  question_answer_focus_vector; ```Hit Rate: 97%, MRR: 91%```
+   4.  question_vector; ```Hit Rate: 96%, MRR: 93%```
+   5.  question_focus_vector; ```Hit Rate: 96%, MRR: 92%```
+   6.  answer_vector; ```Hit Rate: 96%, MRR: 90%```
 
 #### Minsearch
 1. Text search (without boosting):
@@ -126,13 +125,12 @@ If you use the MedQuAD dataset, please cite the following paper: "A Question-Ent
    ```
 
 3. Hybrid Vector Search:
-        ```
-        question_answer_vector; Hit Rate: 99%  MRR: 96%  
-        question_answer_focus_vector; Hit Rate: 0.99%, MRR: 95%
-        answer_focus_vector; Hit Rate: 99%, MRR: 93%
-        answer_vector; Hit Rate: 98%, MRR: 90%
-        question_vector; Hit Rate: 97%, MRR: 93%
-        question_focus_vector; Hit Rate: 97%, MRR: 93%```
+   1.  question_answer_vector; ```Hit Rate: 99%  MRR: 96%```  
+   2.  question_answer_focus_vector; ```Hit Rate: 0.99%, MRR: 95%```
+   3.  answer_focus_vector; ```Hit Rate: 99%, MRR: 93%```
+   4.  answer_vector; ```Hit Rate: 98%, MRR: 90%```
+   5.  question_vector; ```Hit Rate: 97%, MRR: 93%```
+   6.  question_focus_vector; ```Hit Rate: 97%, MRR: 93%```
 
 ### RAG Evaluation
 
