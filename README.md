@@ -33,8 +33,8 @@ Key features include:
 
 This curated dataset aims to provide a diverse yet focused collection of medical information, suitable for developing and testing healthcare-oriented data science models and applications.
 
-### Reference
-If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, please cite the following paper: "A Question-Entailment Approach to Question Answering". Asma Ben Abacha and Dina Demner-Fushman. BMC Bioinformatics, 2019.
+### Data Reference
+If you use the MedQuAD dataset, please cite the following paper: "A Question-Entailment Approach to Question Answering". Asma Ben Abacha and Dina Demner-Fushman. BMC Bioinformatics, 2019.
 
    @ARTICLE{BenAbacha-BMC-2019,
    author = {Asma {Ben Abacha} and Dina Demner{-}Fushman},
@@ -50,9 +50,9 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
 ## Technology Stack
 * Python 3.12.1: Core development
 * Docker & Docker Compose: Containerization
-* Minsearch: Full-text search
+* Minsearch and Elastic Search: Full-text search
 * OpenAI API: Language model integration
-* Streamli: User Interface
+* Streamlit: User Interface
 * PostgreSQL: Database management
 * Grafana: Monitoring and visualization
    
@@ -98,14 +98,14 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
    - MRR : 86%
 
 3. Vector Search with Combinations: 
-         ```python
-
+         ```
         question_answer_vector; Hit Rate: 98%, MRR: 95%
         answer_focus_vector; Hit Rate: 97%, MRR: 93%
         question_answer_focus_vector; Hit Rate: 97%, MRR: 91%
         question_vector; Hit Rate: 96%, MRR: 93%
         question_focus_vector; Hit Rate: 96%, MRR: 92%
-        answer_vector; Hit Rate: 96%, MRR: 90%```
+        answer_vector; Hit Rate: 96%, MRR: 90% 
+      ```
 
 #### Minsearch
 1. Text search (without boosting):
@@ -117,7 +117,7 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
    - MRR : 93%
 
  Boosting parameters:
-   ```python
+   ```
    boost = {
     'question': 2.209413642492037, 
     'answer': 2.030098462268734, 
@@ -136,7 +136,7 @@ If you use the MedQuAD dataset and/or the collection of 2,479 judged answers, pl
         question_vector; Hit Rate: 97%, MRR: 93%
         question_focus_vector; Hit Rate: 97%, MRR: 93%```
 
-### RAG Flow Evaluation
+### RAG Evaluation
 
 Using LLM-as-a-Judge metric (sample) utilizing ```question_answer_vector```:
 
