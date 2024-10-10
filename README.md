@@ -97,15 +97,14 @@ If you use the MedQuAD dataset, please cite the following paper: "A Question-Ent
    - Hit rate : 90% (slightly worse)
    - MRR : 86%
 
-3. Vector Search with Combinations: 
+3. Hybrid Vector Search:
          ```
         question_answer_vector; Hit Rate: 98%, MRR: 95%
         answer_focus_vector; Hit Rate: 97%, MRR: 93%
         question_answer_focus_vector; Hit Rate: 97%, MRR: 91%
         question_vector; Hit Rate: 96%, MRR: 93%
         question_focus_vector; Hit Rate: 96%, MRR: 92%
-        answer_vector; Hit Rate: 96%, MRR: 90% 
-      ```
+        answer_vector; Hit Rate: 96%, MRR: 90% ```
 
 #### Minsearch
 1. Text search (without boosting):
@@ -126,9 +125,8 @@ If you use the MedQuAD dataset, please cite the following paper: "A Question-Ent
    }
    ```
 
-1. Vector Search with Combinations:
-        ```python
-
+3. Hybrid Vector Search:
+        ```
         question_answer_vector; Hit Rate: 99%  MRR: 96%  
         question_answer_focus_vector; Hit Rate: 0.99%, MRR: 95%
         answer_focus_vector; Hit Rate: 99%, MRR: 93%
