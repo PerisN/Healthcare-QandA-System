@@ -6,9 +6,8 @@ from zoneinfo import ZoneInfo
 
 RUN_TIMEZONE_CHECK = os.getenv('RUN_TIMEZONE_CHECK', '1') == '1'
 
-TZ_INFO = os.getenv("TZ", "Europe/Berlin")
+TZ_INFO = os.getenv("TZ", "Africa/Nairobi")  
 tz = ZoneInfo(TZ_INFO)
-
 
 def get_db_connection():
     return psycopg2.connect(
@@ -104,16 +103,18 @@ def save_feedback(conversation_id, feedback, timestamp=None):
             # Check if the conversation_id exists
             cur.execute("SELECT 1 FROM conversations WHERE id = %s", (conversation_id,))
             if not cur.fetchone():
-                raise ValueError(f"Conversation ID {conversation_id} does not exist. Feedback cannot be saved.")
+                print(f"Conversation ID {conversation_id} does not exist. Feedback cannot be saved.")
+                return
 
             cur.execute(
-                "INSERT INTO feedback (conversation_id, feedback, timestamp) VALUES (%s, %s, COALESCE(%s, CURRENT_TIMESTAMP))",
+                "INSERT INTO feedback (conversation_id, feedback, timestamp) VALUES (%s, %s, %s)",
                 (conversation_id, feedback, timestamp),
             )
-            print(f"Feedback saved: {feedback} for conversation ID: {conversation_id}")  # Debug statement
+            print(f"Feedback saved: {feedback} for conversation ID: {conversation_id}")
         conn.commit()
+        print("Database transaction committed.")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred while saving feedback: {e}")
         conn.rollback()
     finally:
         conn.close()
@@ -138,22 +139,22 @@ def get_recent_conversations(limit=5, relevance=None):
         conn.close()
 
 
-# def get_feedback_stats():
-#     conn = get_db_connection()
-#     try:
-#         with conn.cursor() as cur:
-#             cur.execute("SELECT COUNT(*) FROM feedback WHERE feedback = 1;")
-#             thumbs_up = cur.fetchone()[0]  # Get count of thumbs up
+def get_feedback_stats():
+    conn = get_db_connection()
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT COUNT(*) FROM feedback WHERE feedback = 1;")
+            thumbs_up = cur.fetchone()[0]  
 
-#             cur.execute("SELECT COUNT(*) FROM feedback WHERE feedback = 1;")
-#             thumbs_down = cur.fetchone()[0]  # Get count of thumbs down
+            cur.execute("SELECT COUNT(*) FROM feedback WHERE feedback = -1;")  
+            thumbs_down = cur.fetchone()[0]  
 
-#             return {"thumbs_up": thumbs_up, "thumbs_down": thumbs_down}  # Return the stats as a dictionary
-#     except Exception as e:
-#         print(f"An error occurred while fetching feedback stats: {e}")
-#         return None  # Return None if an error occurs
-#     finally:
-#         conn.close()
+            return {"thumbs_up": thumbs_up, "thumbs_down": thumbs_down} 
+    except Exception as e:
+        print(f"An error occurred while fetching feedback stats: {e}")
+        return {"thumbs_up": 0, "thumbs_down": 0}  
+    finally:
+        conn.close()
 
 
 def check_timezone():
@@ -174,7 +175,6 @@ def check_timezone():
             py_time = datetime.now(tz)
             print(f"Python current time: {py_time}")
 
-            # Use py_time instead of tz for insertion
             cur.execute("""
                 INSERT INTO conversations 
                 (id, question, answer, response_time, relevance, 
