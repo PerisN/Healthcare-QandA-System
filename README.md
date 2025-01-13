@@ -34,18 +34,7 @@ Key features include:
 This curated dataset aims to provide a diverse yet focused collection of medical information, suitable for developing and testing healthcare-oriented data science models and applications.
 
 ### Data Reference
-If you use the MedQuAD dataset, please cite the following paper: "A Question-Entailment Approach to Question Answering". Asma Ben Abacha and Dina Demner-Fushman. BMC Bioinformatics, 2019.
-
-   @ARTICLE{BenAbacha-BMC-2019,
-   author = {Asma {Ben Abacha} and Dina Demner{-}Fushman},
-   title = {A Question-Entailment Approach to Question Answering},
-   journal = {{BMC} Bioinform.},
-   volume = {20},
-   number = {1},
-   pages = {511:1--511:23},
-   year = {2019},
-   url = {https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3119-4}
-   }
+A Question-Entailment Approach to Question Answering". Asma Ben Abacha and Dina Demner-Fushman. BMC Bioinformatics, 2019.
 
 ## Technology Stack
 * Python 3.12.1: Core development
@@ -59,7 +48,7 @@ If you use the MedQuAD dataset, please cite the following paper: "A Question-Ent
 ## Code Organization
 
 - Main application code is in the `app` folder:
-  - `app.py`: Flask API (main entry point)
+  - `app.py`: Main entry point
   - `rag.py`: Core RAG logic
   - `ingest.py`: Data ingestion for knowledge base
   - `minsearch2.py`: In-memory search engine
